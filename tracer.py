@@ -21,7 +21,9 @@ buttons = [
     {"label": "Wingardium", "rect": pygame.Rect(485, 10, button_width, button_height), 'cls': 0},
     {"label": "Protego", "rect": pygame.Rect(485, 60, button_width, button_height), 'cls': 1},
     {"label": "Stupefy", "rect": pygame.Rect(485, 110, button_width, button_height), 'cls': 2},
-    {"label": "Reset", "rect": pygame.Rect(485, 160, button_width, button_height), 'cls': 3},
+    {"label": "Engorgio", "rect": pygame.Rect(485, 160, button_width, button_height), 'cls': 3},
+    {"label": "Reducio", "rect": pygame.Rect(485, 210, button_width, button_height), 'cls': 4},
+    {"label": "Reset", "rect": pygame.Rect(485, 260, button_width, button_height), 'cls': 5},
 ]
 
 font = pygame.font.Font(None, 36)
