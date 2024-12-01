@@ -19,7 +19,7 @@ class SpellClassifier(nn.Module):
         self.model = nn.Sequential(
             nn.Conv2d(1, 192, kernel_size=5, stride=2, padding=2),
             nn.BatchNorm2d(192),
-            nn.Dropout(0.5),
+            # nn.Dropout(0.5),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=3, stride=2, padding=0),
             nn.Conv2d(192, 128, kernel_size=3, stride=1, padding=1),
@@ -27,10 +27,10 @@ class SpellClassifier(nn.Module):
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=3, stride=2, padding=1),
             nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
-            nn.Dropout(0.5),
+            # nn.Dropout(0.5),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=3, stride=2, padding=1),
-            nn.Dropout(0.5, ),
+            # nn.Dropout(0.5),
             nn.Flatten(start_dim=1),
             nn.Linear(128 * 9, 512),
             nn.ReLU(),
@@ -103,16 +103,6 @@ class SpellImageDataset(torch.utils.data.Dataset):
         return self.images[idx], self.labels[idx]
 
 
-def calculate_ap(precision):
-    """Calculate Average Precision for a class."""
-    return np.mean(precision)
-
-
-def calculate_ar(recall):
-    """Calculate Average Recall for a class."""
-    return np.mean(recall)
-
-
 def calculate_metrics(y_true, y_pred, num_classes):
     """Calculate comprehensive metrics for the model evaluation."""
     conf_matrix = confusion_matrix(y_true, y_pred)
@@ -129,13 +119,9 @@ def calculate_metrics(y_true, y_pred, num_classes):
     fn = np.sum(conf_matrix, axis=1) - tp
     tn = np.sum(conf_matrix) - (fp + fn + tp)
 
-    # Calculate AP and AR for each class
-    ap = [calculate_ap(precision[i : i + 1]) for i in range(num_classes)]
-    ar = [calculate_ar(recall[i : i + 1]) for i in range(num_classes)]
-
     # Calculate mAP and mAR
-    map_score = np.mean(ap)
-    mar_score = np.mean(ar)
+    ap = np.mean(precision)
+    ar = np.mean(recall)
 
     metrics = {
         "confusion_matrix": conf_matrix,
@@ -149,8 +135,6 @@ def calculate_metrics(y_true, y_pred, num_classes):
         "false_negative": fn,
         "ap": ap,
         "ar": ar,
-        "mAP": map_score,
-        "mAR": mar_score,
     }
     return metrics
 
@@ -190,13 +174,12 @@ def validate(model, device, loader, num_classes=5):
         # Save results
         conf_df = pd.DataFrame(
             metrics["confusion_matrix"],
-            index=[f"True_{i}" for i in range(num_classes)],
-            columns=[f"Pred_{i}" for i in range(num_classes)],
+            index=[i for i in range(num_classes)],
+            columns=[i for i in range(num_classes)],
         )
         conf_df.to_csv(f"{results_dir}/confusion_matrix_{timestamp}.csv")
 
         metrics_dict = {
-            "Accuracy": metrics["accuracy"],
             "Class": list(range(num_classes)),
             "Precision": metrics["precision"],
             "Recall": metrics["recall"],
@@ -205,8 +188,6 @@ def validate(model, device, loader, num_classes=5):
             "TN": metrics["true_negative"],
             "FP": metrics["false_positive"],
             "FN": metrics["false_negative"],
-            "AP": metrics["ap"],
-            "AR": metrics["ar"],
         }
 
         metrics_df = pd.DataFrame(metrics_dict)
@@ -214,8 +195,8 @@ def validate(model, device, loader, num_classes=5):
 
         global_metrics_df = pd.DataFrame(
             {
-                "Metric": ["mAP", "mAR", "Overall_Accuracy"],
-                "Value": [metrics["mAP"], metrics["mAR"], metrics["accuracy"]],
+                "Metric": ["AP", "AR", "Accuracy", "F1"],
+                "Value": [metrics["ap"], metrics["ar"], metrics["accuracy"], np.mean(metrics["f1"])],
             }
         )
         global_metrics_df.to_csv(
@@ -245,8 +226,10 @@ def train(
     dataset = SpellImageDataset(data_dir, color_mode=color_mode)
     train_size = int(0.8 * len(dataset))
     val_size = len(dataset) - train_size
+    generator = torch.Generator().manual_seed(42)
     train_dataset, val_dataset = torch.utils.data.random_split(
-        dataset, [train_size, val_size]
+        dataset, [train_size, val_size],
+        generator=generator
     )
     train_loader = DataLoader(train_dataset, batch_size=48, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=48, shuffle=False)
