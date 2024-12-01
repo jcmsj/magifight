@@ -6,3 +6,4 @@ datasets
 
 validation_results
 training_results
+*.ckpt

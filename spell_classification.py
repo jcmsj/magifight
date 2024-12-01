@@ -58,9 +58,12 @@ rgb_transform = transforms.Compose(
     ]
 )
 
-grayscale_transform = transforms.Compose(
-    [transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))]
-)
+# Update the grayscale transform definition
+grayscale_transform = transforms.Compose([
+    transforms.Resize((48, 48)),  # Resize all images to 48x48
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
 
 class SpellImageDataset(torch.utils.data.Dataset):
     def __init__(self, data_dir, color_mode="rgb"):
@@ -79,14 +82,19 @@ class SpellImageDataset(torch.utils.data.Dataset):
             for file in files:
                 if not file.endswith(".bmp"):
                     continue
-                path = os.path.join(root, file)
-                image = Image.open(path)
-                # Convert to grayscale
-                if self.color_mode == "L":
-                    image = image.convert("L")
-                image = self.transform(image)
-                self.images.append(image)
-                self.labels.append(int(file.split(".")[-2]))
+                try:
+                    path = os.path.join(root, file)
+                    image = Image.open(path)
+                    # Convert to grayscale if needed
+                    if self.color_mode == "L":
+                        image = image.convert("L")
+                    # Apply transform
+                    image = self.transform(image)
+                    self.images.append(image)
+                    self.labels.append(int(file.split(".")[-2]))
+                except Exception as e:
+                    print(f"Error loading {file}: {e}")
+                    continue
 
     def __len__(self):
         return len(self.images)
@@ -235,7 +243,7 @@ def train(
     from torch.utils.data import DataLoader
 
     dataset = SpellImageDataset(data_dir, color_mode=color_mode)
-    train_size = int(0.7 * len(dataset))
+    train_size = int(0.8 * len(dataset))
     val_size = len(dataset) - train_size
     train_dataset, val_dataset = torch.utils.data.random_split(
         dataset, [train_size, val_size]

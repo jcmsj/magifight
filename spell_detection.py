@@ -11,12 +11,18 @@ import socket
 debounce = time.time()
 last_spell = ''
 do_save = False
+# win:0
+# protego:1
+# stupefy:2
+# engorgio:3
+# reducio:4
+# unknown:5
 text = ['Wingardium Leviosa', 'Protego', 'Stupefy', 'Engorgio','Reducio', 'Unknown']
 index_tip_pts = []
 num_classes = len(text) -1
 UNKNOWN_CLS = num_classes
 model = SpellClassifier(num_classes)
-model.load_state_dict(torch.load('harrynet.ckpt',weights_only=True))
+model.load_state_dict(torch.load('harrynet_3.ckpt',weights_only=True))
 # model = models.resnet34(weights=models.ResNet34_Weights.DEFAULT)
 # num_features = model.fc.in_features
 # model.fc = nn.Sequential(
