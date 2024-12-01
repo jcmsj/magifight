@@ -3,3 +3,6 @@ __pycache__
 datasets
 *.bmp
 *task
+
+validation_results
+training_results

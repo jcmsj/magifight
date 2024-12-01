@@ -6,7 +6,6 @@ import numpy as np
 BLACK = [0, 0, 0]
 WHITE = [255, 255, 255]
 
-
 def from_binary_matrix_to_bitmap(binary_matrix: list[list[int]]) -> np.ndarray:
     # Transpose the binary matrix to correct the orientation
     transposed_matrix = np.transpose(binary_matrix)
@@ -36,9 +35,7 @@ def xyn_to_bitmap(xyn: list[list[float]]) -> np.ndarray:
         xyn_to_matrix(xyn)
     )
 
-
 dir = "./datasets/spells/"
-
 
 def save(bitmap: list[list[int]], classification_idx: int, _dir: str = dir):
     # save into a bitmap file
@@ -62,7 +59,8 @@ def main():
             # spell_count[int(file.name.split('.')[-1][0])] += 1
 
     print(f"Spell count: {spell_count}")
-
+    # total:
+    print(f"Total: {sum(spell_count)}")
 
 if __name__ == "__main__":
     main()

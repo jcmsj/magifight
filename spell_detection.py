@@ -1,8 +1,10 @@
 import time
 import cv2
 import torch
+from torch import nn
 from saver import xyn_to_bitmap,xyn_to_matrix, save
 from PIL import Image
+from torchvision import models
 from spell_classification import SpellClassifier,predict, grayscale_transform
 import socket
 
@@ -11,8 +13,16 @@ last_spell = ''
 do_save = False
 text = ['Wingardium Leviosa', 'Protego', 'Stupefy', 'Engorgio','Reducio', 'Unknown']
 index_tip_pts = []
-model = SpellClassifier(len(text)-1)
+num_classes = len(text) -1
+UNKNOWN_CLS = num_classes
+model = SpellClassifier(num_classes)
 model.load_state_dict(torch.load('harrynet.ckpt',weights_only=True))
+# model = models.resnet34(weights=models.ResNet34_Weights.DEFAULT)
+# num_features = model.fc.in_features
+# model.fc = nn.Sequential(
+#     nn.Linear(num_features, num_classes), nn.Softmax(dim=1)
+# )
+# model.load_state_dict(torch.load('resnet34_1.ckpt'))
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model = model.to(device)
 
@@ -46,7 +56,7 @@ def identifySpell(pts:list[list[float]],_):
                 print(f"Casted spell(conf={confidence}): ", last_spell)
                 if s is not None and ip_port is not None:
                     s.sendto(str(pred_cls).encode("utf-8"), ip_port)
-                if do_save and pred_cls != 5:
+                if do_save and pred_cls != UNKNOWN_CLS:
                     save(xyn_to_matrix(index_tip_pts), pred_cls, "./detect/")
                     
                 index_tip_pts.clear()
@@ -63,3 +73,4 @@ def spellGestureRenderer(raw_img):
     for pt in index_tip_pts:
         cv2.circle(raw_img, (int(pt[0]*raw_img.shape[1]), int(pt[1]*raw_img.shape[0])), 3, (0, 165, 255), 3)
 
+    

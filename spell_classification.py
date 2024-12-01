@@ -62,7 +62,6 @@ grayscale_transform = transforms.Compose(
     [transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))]
 )
 
-
 class SpellImageDataset(torch.utils.data.Dataset):
     def __init__(self, data_dir, color_mode="rgb"):
         self.data_dir = data_dir
