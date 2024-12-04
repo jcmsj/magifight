@@ -1,5 +1,5 @@
 import torch
-from spell_classification import SpellClassifier
+from model import HarryNet
 
 def count_parameters(model):
     total_params = sum(p.numel() for p in model.parameters())
@@ -9,7 +9,7 @@ def count_parameters(model):
 if __name__ == "__main__":
     # Create model with same configuration as in spell_detection.py
     num_classes = 5  # Matching the number of spells excluding 'Unknown'
-    model = SpellClassifier(num_classes)
+    model = HarryNet(num_classes)
     
     # Load the model weights
     model.load_state_dict(torch.load('harrynet_16.ckpt', map_location=torch.device('cpu')))

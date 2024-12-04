@@ -91,7 +91,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 HandLandMarkerResult = mp.tasks.vision.HandLandmarkerResult
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-ip = "172.26.0.1"
+ip = "127.0.0.1"
 port = 4242
 ip_port = (ip,port)
 def sendToClient(pts:list[list[float]],_):
@@ -118,7 +118,7 @@ options = vision.GestureRecognizerOptions(
         # model_asset_path='gesture_recognizer.task',
         # hand_landmarker
         model_asset_path='gesture_recognizer.task',
-        delegate=mp.tasks.BaseOptions.Delegate.GPU,
+        # delegate=mp.tasks.BaseOptions.Delegate.GPU,
     ),
     min_hand_detection_confidence=0.4,
     min_tracking_confidence=0.5,

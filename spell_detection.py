@@ -3,9 +3,9 @@ import cv2
 import torch
 from saver import xyn_to_bitmap,xyn_to_matrix, save
 from PIL import Image
-from spell_classification import SpellClassifier,predict, grayscale_transform
+from spell_classification import predict, grayscale_transform
 import socket
-
+from model import HarryNet
 debounce = time.time()
 last_spell = ''
 do_save = False
@@ -19,8 +19,8 @@ text = ['Wingardium Leviosa', 'Protego', 'Stupefy', 'Engorgio','Reducio', 'Unkno
 index_tip_pts = []
 num_classes = len(text) -1
 UNKNOWN_CLS = num_classes
-model = SpellClassifier(num_classes)
-model.load_state_dict(torch.load('harrynet_15.ckpt',weights_only=True))
+model = HarryNet(num_classes)
+model.load_state_dict(torch.load('harrynet.ckpt',weights_only=True))
 # model = models.resnet34(weights=models.ResNet34_Weights.DEFAULT)
 # num_features = model.fc.in_features
 # model.fc = nn.Sequential(
@@ -31,7 +31,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model = model.to(device)
 
 s:socket.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-ip = "172.26.0.1"
+ip = "127.0.0.1"
 ip_port = (ip,4243)
 def pred(pts:list[list[float]]):
     grid = xyn_to_bitmap(pts)

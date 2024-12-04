@@ -12,41 +12,7 @@ import pandas as pd
 import os
 from datetime import datetime
 import time
-
-class SpellClassifier(nn.Module):
-    def __init__(self, num_classes):
-        super(SpellClassifier, self).__init__()
-        self.model = nn.Sequential(
-            nn.Conv2d(1, 192, kernel_size=5, stride=2, padding=2),
-            nn.BatchNorm2d(192),
-            # nn.Dropout(0.5),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=3, stride=2, padding=0),
-            nn.Conv2d(192, 128, kernel_size=3, stride=1, padding=1),
-            nn.Dropout(0.5),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=3, stride=2, padding=1),
-            nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
-            # nn.Dropout(0.5),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=3, stride=2, padding=1),
-            # nn.Dropout(0.5),
-            nn.Flatten(start_dim=1),
-            nn.Linear(128 * 9, 512),
-            nn.ReLU(),
-            nn.Dropout(0.5),
-            nn.Linear(512, 128),
-            nn.ReLU(),
-            nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Linear(64, num_classes),
-            # for confidence
-            nn.Softmax(dim=1),
-        )
-
-    def forward(self, x):
-        return self.model(x)
-
+from model import HarryNet
 
 # Define transforms for both RGB and grayscale images
 rgb_transform = transforms.Compose(
@@ -268,13 +234,14 @@ def train(
     epoch_times_df = pd.DataFrame(
         {"Epoch": range(1, num_epochs + 1), "Time_Seconds": epoch_times}
     )
+    save_dir = "training_results"
+    os.makedirs(save_dir,exist_ok=True)
     epoch_times_df.to_csv(
-        f"training_results/epoch_times_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+        f"{save_dir}/epoch_times_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
         index=False,
     )
     
     torch.save(model.state_dict(), model_file_template_name)
-
 
 def predict(model, device, image, conf_threshold=0.5):
     model.eval()
@@ -286,7 +253,6 @@ def predict(model, device, image, conf_threshold=0.5):
         if confidence.item() >= conf_threshold:
             return predicted.item(), confidence.item()
         return -1, confidence.item()
-
 
 def get_unique_model_filename(base_template):
     """Generate a unique model filename by adding numeric suffix if needed."""
@@ -301,7 +267,6 @@ def get_unique_model_filename(base_template):
         if not os.path.exists(filename):
             return filename
         counter += 1
-
 
 def main():
     import argparse
@@ -332,7 +297,7 @@ def main():
 
     # Initialize model based on selected architecture
     if args.arch == "harrynet":
-        model = SpellClassifier(args.num_classes)
+        model = HarryNet(args.num_classes)
     elif args.arch == "alexnet":
         model = models.alexnet(num_classes=args.num_classes)
     else:  # resnet34
