@@ -3,6 +3,15 @@
 ## Description
 MagiFight is a magical combat game where players can cast spells and battle against each other in a fantasy world.
 
+## Roadmap
+### Phase 1: Spell Classification Using Spell Gestures (SCURGE)
+- [x] Dataset development
+- [x] Model training
+- [x] Demo game world w/ Godot
+- [X] Integration of SCURGE into the game
+### Phase 2: World Development
+### Phase 3: Multiplayer
+
 ## Directory Structure
 ```bash
 /game - contains the godot project files
@@ -70,11 +79,3 @@ python spell_classification.py --help
 python spell_classification.py --arch harrynet --model ./models/harry/harrynet.ckpt --val-only --val-data ./datasets/spells
 ```
 
-## Roadmap
-### Phase 1: Spell Classification Using Spell Gestures (SCURGE)
-- [x] Dataset development
-- [x] Model training
-- [x] Demo game world w/ Godot
-- [X] Integration of SCURGE into the game
-### Phase 2: World Development
-### Phase 3: Multiplayer
