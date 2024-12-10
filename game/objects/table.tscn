@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://d3n0ds60mjsq1"]
+
+[ext_resource type="PackedScene" uid="uid://0ey12e05shv7" path="res://objects/table.fbx" id="1_nhhfq"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2bsct"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_33eq8"]
+size = Vector3(12.0959, 11.992, 1)
+
+[node name="room" instance=ExtResource("1_nhhfq")]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Cube" index="0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube/RigidBody3D" index="0"]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, -3.19744e-14, 0, 8.95284e-14, 0.5, 0, -2.76579e-10, 0.00232011)
+shape = SubResource("BoxShape3D_2bsct")
+
+[node name="Plane" parent="." index="2"]
+transform = Transform3D(-52.347, 81.3078, 25.4723, 2.98023e-06, -29.8955, 95.4267, 85.2044, 49.953, 15.6494, 0.627667, 5.06149, 0.0224)
+
+[node name="Plane_001" parent="." index="3"]
+transform = Transform3D(-21.4874, -91.5417, 34.0353, -84.5585, 1.78814e-05, -53.3841, 48.8687, -40.2506, -77.4063, -0.303903, 5.919, 1.06871)
+
+[node name="Plane_002" parent="." index="4"]
+transform = Transform3D(199.737, -10.2516, -4.4811e-07, 0, -8.74228e-06, 200, -10.2516, -199.737, -8.73079e-06, 0.43842, -0.031767, -2.53429)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Plane_002" index="0"]
+transform = Transform3D(0.00499343, -5.77216e-12, -0.000256292, -0.000256292, -2.2507e-10, -0.00499343, -5.77216e-12, 0.005, -2.2507e-10, -0.00253524, -0.00662943, 0.000158835)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Plane_002/StaticBody3D" index="0"]
+transform = Transform3D(0.998685, -0.0512578, -2.24055e-09, 0, -4.37114e-08, 1, -0.0512578, -0.998685, -4.36539e-08, 0.400951, -1.07089e-07, -2.47372)
+shape = SubResource("BoxShape3D_33eq8")

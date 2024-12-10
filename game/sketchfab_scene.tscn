@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://df8q1axgm4xpf"]
+
+[ext_resource type="PackedScene" uid="uid://4o1smwsexp18" path="res://objects/feather.glb" id="1_qan4t"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3vn5o"]
+
+[node name="Sketchfab_Scene" instance=ExtResource("1_qan4t")]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." index="1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" index="0"]
+shape = SubResource("CapsuleShape3D_3vn5o")

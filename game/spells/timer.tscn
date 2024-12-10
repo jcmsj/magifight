@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cvrsrw80n3pav"]
+
+[ext_resource type="Script" path="res://spells/unstupefy.gd" id="1_66khv"]
+
+[node name="Timer" type="Timer"]
+one_shot = true
+autostart = true
+script = ExtResource("1_66khv")
+
+[connection signal="timeout" from="." to="." method="_on_timeout"]
+[connection signal="tree_entered" from="." to="." method="_on_tree_entered"]

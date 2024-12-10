@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://c1iocttpo5v6v"]
+
+[ext_resource type="PackedScene" uid="uid://lrv0v2b8xqa1" path="res://hand2.glb" id="1_mrbdl"]
+[ext_resource type="Script" path="res://handkeypoints.gd" id="2_6egbv"]
+[ext_resource type="Script" path="res://skeleton_3d.gd" id="2_rckby"]
+
+[node name="hand2" instance=ExtResource("1_mrbdl")]
+script = ExtResource("2_6egbv")
+
+[node name="Skeleton3D" parent="Armature" index="0"]
+script = ExtResource("2_rckby")
+
+[connection signal="DidMove" from="Armature/Skeleton3D" to="." method="_on_skeleton_3d_did_move"]
