@@ -20,7 +20,7 @@ index_tip_pts = []
 num_classes = len(text) -1
 UNKNOWN_CLS = num_classes
 model = HarryNet(num_classes)
-model.load_state_dict(torch.load('harrynet.ckpt',weights_only=True))
+model.load_state_dict(torch.load('./models/harry/harrynet.ckpt',weights_only=True))
 # model = models.resnet34(weights=models.ResNet34_Weights.DEFAULT)
 # num_features = model.fc.in_features
 # model.fc = nn.Sequential(

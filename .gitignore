@@ -1,9 +1,10 @@
 .venv
 __pycache__
-datasets
+datasets/spells
 *.bmp
 *task
 
 validation_results
 training_results
 *.ckpt
+dist

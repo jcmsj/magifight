@@ -1,7 +1,6 @@
 import torch
 from torch import nn
 from torchvision import transforms, models
-import torch.nn.functional as F
 import numpy as np
 from sklearn.metrics import (
     confusion_matrix,
